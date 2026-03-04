@@ -1,0 +1,54 @@
+<!-- Dashboard -->
+<h2>📊 Dashboard</h2>
+
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="number" id="todayItems">0</div>
+        <div class="label">Today's Work Items</div>
+    </div>
+    <div class="stat-card">
+        <div class="number" id="totalProjects">0</div>
+        <div class="label">Total Projects</div>
+    </div>
+    <div class="stat-card">
+        <div class="number" id="totalTechnologies">0</div>
+        <div class="label">Total Technologies Used</div>
+    </div>
+    <div class="stat-card">
+        <div class="number" id="totalAchievements">0</div>
+        <div class="label">Total Achievements</div>
+    </div>
+    <div class="stat-card">
+        <div class="number" id="averageProgress">0%</div>
+        <div class="label">Average Project Progress</div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 15px;">📈 This Week's Work Progress</h3>
+    <div class="progress-bar">
+        <div class="progress-fill" id="weekProgress"></div>
+    </div>
+    <div style="display: flex; justify-content: space-between; font-size: 12px; color: #6c757d;">
+        <span>Completed: <span id="completedItems">0</span> items</span>
+        <span>Target: <span id="weeklyTarget">21</span> items/week</span>
+        <span>Progress: <span id="progressPercent">0%</span></span>
+    </div>
+</div>
+
+<div class="card">
+    <h3>📋 Recent Work Records</h3>
+    <div id="recentWorkList">
+        <div style="text-align: center; padding: 20px; color: #6c757d;">
+            No recent work records available.
+        </div>
+    </div>
+</div>
+
+<!-- Pending Plans Preview -->
+<div class="card" id="planPreview" style="display: none;">
+    <h3>📅 Pending Plans</h3>
+    <div id="pendingPlansList">
+        <!-- Pending plans will be displayed here -->
+    </div>
+</div>

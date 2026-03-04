@@ -1,0 +1,32 @@
+<!-- Data Management Page -->
+<h2>💾 Data Management</h2>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    <div class="card">
+        <h3>📊 Data Statistics</h3>
+        <div id="dataStats"></div>
+    </div>
+    
+    <div class="card">
+        <h3>🔧 Data Operations</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn btn-info" id="exportDataBtn">📤 Export Data</button>
+            <button class="btn btn-info" id="importDataBtn">📥 Import Data</button>
+            <button class="btn" id="clearDataBtn" style="background: #dc3545; color: white;">🗑️ Clear Data</button>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>📋 Project Management</h3>
+    <div id="projectManagement">
+        <!-- Project list will be dynamically generated here -->
+    </div>
+</div>
+
+<div class="card">
+    <h3>📋 All Work Records</h3>
+    <div id="allWorkList">
+        <!-- Work record list will be dynamically generated here -->
+    </div>
+</div>

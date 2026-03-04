@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Engineer Work Tracker</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 id="app-title">🚀 Engineer Work Tracker</h1>
+                    <p id="app-subtitle">Automatically record your work and generate reports</p>
+                </div>
+                <div class="language-selector">
+                    <select id="languageSelect" style="padding: 5px 10px; border-radius: 5px; border: 1px solid #ced4da;">
+                        <option value="zh-CN" id="lang-zh">中文</option>
+                        <option value="en" id="lang-en">English</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="dashboard" id="nav-dashboard">📊 Dashboard</button>
+            <button class="nav-tab" data-tab="record" id="nav-record">📝 Record Work</button>
+            <button class="nav-tab" data-tab="reports" id="nav-reports">📋 Generate Reports</button>
+            <button class="nav-tab" data-tab="data" id="nav-data">💾 Data Management</button>
+        </div>
+        
+        <!-- Dynamic content loading area -->
+        <div id="content"></div>
+    </div>
+
+    <!-- Load all JavaScript modules -->
+    <script src="js/translations.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/record.js"></script>
+    <script src="js/reports.js"></script>
+    <script src="js/data.js"></script>
+    <script>
+    // Ensure initialization after page load
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('All scripts loaded');
+        
+        // Initialize language selector
+        const languageSelect = document.getElementById('languageSelect');
+        if (languageSelect) {
+            languageSelect.value = window.i18n.currentLang;
+            languageSelect.addEventListener('change', function() {
+                window.i18n.setLanguage(this.value);
+            });
+        }
+        
+        // Initialize UI language
+        window.i18n.updateUI();
+    });
+    </script>
+</body>
+</html>

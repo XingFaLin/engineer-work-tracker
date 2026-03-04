@@ -1,0 +1,17 @@
+{
+  "name": "engineer-work-tracker",
+  "version": "1.0.0",
+  "description": "Engineer Work Tracker - Automatically record and track engineer work achievements",
+  "main": "main.js",
+  "directories": {
+    "js": "js",
+    "css": "css"
+  },
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "dependencies": {
+    "electron": "^25.0.0"
+  }
+}

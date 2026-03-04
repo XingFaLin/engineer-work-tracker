@@ -1,0 +1,26 @@
+<!-- 生成报告页面 -->
+<h2>📋 生成报告</h2>
+
+<div class="card">
+    <h3>📄 选择报告类型</h3>
+    <div class="form-group">
+        <label for="reportType">报告类型</label>
+        <select id="reportType" class="form-control">
+            <option value="">请选择报告类型</option>
+        </select>
+    </div>
+    
+    <div id="reportParams">
+        <!-- 动态参数区域 -->
+    </div>
+    
+    <button class="btn btn-primary" id="generateReportBtn">🔄 生成报告</button>
+</div>
+
+<div class="card" id="reportPreviewCard" style="display: none;">
+    <h3>📊 报告预览</h3>
+    <div class="report-preview" id="reportPreview"></div>
+    <div style="margin-top: 15px;">
+        <button class="btn btn-info" id="downloadReportBtn" style="display: none;">📥 下载报告</button>
+    </div>
+</div>
