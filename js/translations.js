@@ -2,8 +2,8 @@
 const TRANSLATIONS = {
     'zh-CN': {
         // 通用
-        'app.title': '工程师工作沉淀系统',
-        'app.subtitle': '自动记录工作成果，一键生成各类报告',
+        'app.title': '工程师工作管理系统 v1.0',
+        'app.subtitle': '自动记录工作成果，一键生成各类报告 | 研发项目成本评估',
         'loading': '加载中...',
         'save': '保存',
         'cancel': '取消',
@@ -31,6 +31,8 @@ const TRANSLATIONS = {
         'nav.record': '📝 记录工作',
         'nav.reports': '📋 生成报告',
         'nav.data': '💾 数据管理',
+        'nav.estimation': '📐 研发评估',
+        'estimation.title': '研发评估',
         
         // 仪表板
         'dashboard.title': '📊 工作台',
@@ -60,6 +62,7 @@ const TRANSLATIONS = {
         'record.planManagement': '工作计划管理',
         'record.planContent': '计划内容 *',
         'record.expectedDifficulty': '预计难点',
+        'record.difficulty': '难度',
         'record.workDifficulty': '工作难点',
         'record.todayWorkRecord': '今日工作记录',
         'record.workContent': '工作内容 *',
@@ -70,6 +73,7 @@ const TRANSLATIONS = {
         'record.tags': '标签分类（用逗号分隔）',
         'record.placeholder.planContent': '计划完成什么工作...',
         'record.placeholder.expectedDifficulty': '预计可能遇到的难点...',
+        'record.placeholder.difficulty': '难度评分(1-5)',
         'record.placeholder.workContent': '今天具体完成了什么工作...',
         'record.placeholder.workDifficulty': '遇到的问题和解决方案...',
         'record.placeholder.project': '例如：用户管理系统重构',
@@ -155,6 +159,8 @@ const TRANSLATIONS = {
         'data.totalProjects': '总项目数',
         'data.totalTechnologies': '技术栈数量',
         'data.totalWorkDays': '工作天数',
+        'data.estimationProjects': '评估项目',
+        'data.estimationTasks': '评估任务/人力',
         'data.records': '记录',
         'data.lastUpdate': '最后更新',
         'data.planHint': '提示：当前有',
@@ -321,6 +327,8 @@ const TRANSLATIONS = {
         'msg.clearSuccess': '数据已清空！',
         'msg.electronOnly': '此功能需要在Electron环境中实现',
         'msg.editLoaded': '已加载工作项数据，可以修改后保存',
+        'msg.exportEstimationSuccess': '研发评估数据已导出',
+        'msg.importEstimationSuccess': '研发评估数据已导入',
         'msg.exportSuccess': '数据导出成功！',
         'msg.importSuccess': '数据导入成功！',
         'msg.clearConfirm': '确定要清空所有数据吗？此操作不可恢复！',
@@ -356,8 +364,8 @@ const TRANSLATIONS = {
     },
     'en': {
         // common
-        'app.title': 'Engineer Work Tracker',
-        'app.subtitle': 'Automatically record work achievements, generate reports with one click',
+        'app.title': 'Engineer Work Tracker v1.0',
+        'app.subtitle': 'Automatically record work achievements, generate reports | R&D project cost estimation',
         'loading': 'Loading...',
         'save': 'Save',
         'cancel': 'Cancel',
@@ -384,6 +392,8 @@ const TRANSLATIONS = {
         'nav.record': '📝 Record Work',
         'nav.reports': '📋 Generate Reports',
         'nav.data': '💾 Data Management',
+        'nav.estimation': '📐 R&D Estimation',
+        'estimation.title': 'R&D Estimation',
         
         // dashboard
         'dashboard.title': '📊 Dashboard',
@@ -413,6 +423,7 @@ const TRANSLATIONS = {
         'record.planManagement': 'Work Plan Management',
         'record.planContent': 'Plan Content *',
         'record.expectedDifficulty': 'Expected Difficulties',
+        'record.difficulty': 'Difficulty',
         'record.workDifficulty': 'Work Difficulties',
         'record.todayWorkRecord': 'Today\'s Work Record',
         'record.workContent': 'Work Content *',
@@ -423,6 +434,7 @@ const TRANSLATIONS = {
         'record.tags': 'Tags (comma separated)',
         'record.placeholder.planContent': 'What work to complete...',
         'record.placeholder.expectedDifficulty': 'Expected difficulties...',
+        'record.placeholder.difficulty': 'Difficulty rating (1-5)',
         'record.placeholder.workContent': 'What specific work was completed today...',
         'record.placeholder.workDifficulty': 'Problems encountered and solutions...',
         'record.placeholder.project': 'e.g., User Management System Refactoring',
@@ -508,6 +520,8 @@ const TRANSLATIONS = {
         'data.totalProjects': 'Total Projects',
         'data.totalTechnologies': 'Technologies Used',
         'data.totalWorkDays': 'Work Days',
+        'data.estimationProjects': 'Est. Projects',
+        'data.estimationTasks': 'Est. Tasks/Labor',
         'data.records': 'Records',
         'data.lastUpdate': 'Last Update',
         'data.planHint': 'Hint: Currently there are',
@@ -677,6 +691,8 @@ const TRANSLATIONS = {
         'msg.clearSuccess': 'Data cleared successfully!',
         'msg.electronOnly': 'This feature needs to be implemented in the Electron environment',
         'msg.editLoaded': 'Work item data loaded, you can modify and save',
+        'msg.exportEstimationSuccess': 'R&D Estimation data exported',
+        'msg.importEstimationSuccess': 'R&D Estimation data imported',
         'msg.exportSuccess': 'Data exported successfully!',
         'msg.importSuccess': 'Data imported successfully!',
         'msg.clearConfirm': 'Are you sure you want to clear all data? This action cannot be undone!',

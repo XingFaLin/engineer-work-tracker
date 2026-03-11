@@ -1,4 +1,4 @@
-# 🚀 Engineer Work Tracker System
+# 🚀 Engineer Work Tracker System v1.0
 
 ## ✨ Core Features
 
@@ -14,6 +14,13 @@
 - **Project Template Library**: Quick reuse of common project templates
 - **Smart Tag System**: Automatic classification and technology stack recognition
 
+### 📐 R&D Project Estimation (New in v1.0)
+- **Project Management**: Create, edit, import/export project Excel files
+- **Schedule Planning**: Task management with Gantt chart visualization
+- **Hardware Cost**: BOM material cost management
+- **Labor Cost**: Personnel cost calculation by person-day
+- **Cost Summary**: Automatic calculation of total project cost (labor × person-days + material)
+
 ### 📋 Professional Report Generation
 - **Daily Report**: Daily work summary and detailed records
 - **Weekly Report**: Weekly work summary and project progress
@@ -23,7 +30,7 @@
 
 ### 💾 Data Management
 - **Local Data Storage**: Secure and reliable local data storage
-- **Data Import/Export**: Support for data backup and migration
+- **Data Import/Export**: Support for data backup and migration (including R&D estimation data)
 - **Project Management**: Project information editing and deletion
 - **Work Record Management**: Historical record viewing and modification
 
@@ -127,8 +134,11 @@ npm install
 # Start development version
 npm run dev
 
-# Build production version
+# Build production version (with asar compression)
 npm run build
+
+# Build portable version (no compression, can run directly)
+npm run build:dir
 ```
 
 ## 📊 Data Structure and Format
@@ -169,6 +179,9 @@ npm run build
 ## 🚀 Future Roadmap
 
 ### Short-term Goals (1-3 months)
+- [x] R&D Project Estimation (v1.0)
+- [x] Project Excel Import/Export
+- [x] Gantt Chart Visualization
 - [ ] Add data chart visualization
 - [ ] Support more report templates
 - [ ] Optimize mobile experience
@@ -212,5 +225,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-*Last Updated: January 2024*  
+*Last Updated: March 2026*  
 *Document Version: v1.0*

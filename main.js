@@ -7,9 +7,15 @@ const TRANSLATIONS = require('./js/translations.js');
 const dataDir = path.join(__dirname, 'data');
 const dataFile = path.join(dataDir, 'work-data.json');
 
-
 if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
+}
+
+// Internationalization helper for main process (Node.js environment)
+function getTranslation(key, language = 'zh-CN') {
+    const lang = language || 'zh-CN';
+    const translation = TRANSLATIONS[lang]?.[key] || TRANSLATIONS['en']?.[key] || key;
+    return translation;
 }
 
 class WorkTracker {
@@ -55,32 +61,133 @@ class WorkTracker {
 
     setupIpcHandlers() {
         ipcMain.handle('save-work-item', async (event, workItem) => {
+            const validation = this.validateWorkItem(workItem);
+            if (!validation.valid) {
+                throw new Error(validation.error);
+            }
             return this.saveWorkItem(workItem);
         });
 
         ipcMain.handle('update-work-item', async (event, workItemId, updatedData) => {
+            if (!workItemId || typeof workItemId !== 'string') {
+                throw new Error('Invalid work item ID');
+            }
+            if (!updatedData || typeof updatedData !== 'object') {
+                throw new Error('Invalid update data');
+            }
             return this.updateWorkItem(workItemId, updatedData);
         });
 
         ipcMain.handle('delete-work-item', async (event, workItemId) => {
+            if (!workItemId || typeof workItemId !== 'string') {
+                throw new Error('Invalid work item ID');
+            }
             return this.deleteWorkItem(workItemId);
         });
 
         ipcMain.handle('get-work-items', async (event, filters = {}) => {
+            if (!filters || typeof filters !== 'object') {
+                return this.getWorkItems({});
+            }
             return this.getWorkItems(filters);
         });
 
         ipcMain.handle('generate-report', async (event, type, params) => {
+            const validTypes = ['daily', 'weekly', 'monthly', 'yearly', 'technical'];
+            if (!type || !validTypes.includes(type)) {
+                throw new Error('Invalid report type');
+            }
+            if (!params || typeof params !== 'object') {
+                throw new Error('Invalid report parameters');
+            }
             return this.generateReport(type, params);
         });
 
         ipcMain.handle('get-statistics', async (event, period) => {
+            const validPeriods = ['week', 'month', 'year'];
+            if (!period || !validPeriods.includes(period)) {
+                return this.getStatistics('month');
+            }
             return this.getStatistics(period);
         });
-        // get language
+
         ipcMain.handle('get-language', async (event) => {
             return this.getCurrentLanguage();
         });
+
+        ipcMain.handle('export-data', async (event) => {
+            return this.exportData();
+        });
+
+        ipcMain.handle('import-data', async (event, data) => {
+            if (!Array.isArray(data)) {
+                throw new Error('Invalid data format');
+            }
+            return this.importData(data);
+        });
+    }
+
+    // Validate work item data
+    validateWorkItem(workItem) {
+        if (!workItem || typeof workItem !== 'object') {
+            return { valid: false, error: 'Work item must be an object' };
+        }
+        if (!workItem.project || typeof workItem.project !== 'string') {
+            return { valid: false, error: 'Project name is required' };
+        }
+        if (workItem.project.length > 200) {
+            return { valid: false, error: 'Project name is too long' };
+        }
+        if (workItem.technology && typeof workItem.technology !== 'string') {
+            return { valid: false, error: 'Technology must be a string' };
+        }
+        if (workItem.achievement && typeof workItem.achievement !== 'string') {
+            return { valid: false, error: 'Achievement must be a string' };
+        }
+        if (workItem.difficulty && typeof workItem.difficulty !== 'string') {
+            return { valid: false, error: 'Difficulty must be a string' };
+        }
+        if (workItem.projectProgress !== undefined) {
+            const progress = Number(workItem.projectProgress);
+            if (isNaN(progress) || progress < 0 || progress > 100) {
+                return { valid: false, error: 'Progress must be between 0 and 100' };
+            }
+        }
+        if (workItem.tags && !Array.isArray(workItem.tags)) {
+            return { valid: false, error: 'Tags must be an array' };
+        }
+        return { valid: true };
+    }
+
+    // Export all data
+    exportData() {
+        try {
+            const data = this.readData();
+            const exportData = {
+                version: '1.0',
+                exportedAt: new Date().toISOString(),
+                workItems: data
+            };
+            return exportData;
+        } catch (error) {
+            console.error('Export failed:', error);
+            throw error;
+        }
+    }
+
+    // Import data
+    importData(data) {
+        try {
+            if (!Array.isArray(data)) {
+                throw new Error('Invalid data format');
+            }
+            const currentData = this.readData();
+            const mergedData = [...currentData, ...data];
+            return this.writeData(mergedData);
+        } catch (error) {
+            console.error('Import failed:', error);
+            throw error;
+        }
     }
 
     readData() {
@@ -189,46 +296,15 @@ class WorkTracker {
         };
     }
 
-    // internationalization helper
-    // utility function for safe i18n translation
+    // internationalization helper for main process
     safeI18n(key, fallback = null, language = null) {
         try {
-            return window.i18n ? window.i18n.t(key) : this.getFallbackText(key, fallback, language);
+            const lang = language || this.getCurrentLanguage();
+            return getTranslation(key, lang);
         } catch (error) {
             console.warn(`i18n error for key "${key}":`, error);
-            return this.getFallbackText(key, fallback, language);
+            return fallback || key;
         }
-    }
-
-    // utility function for fallback text
-    getFallbackText(key, customFallback = null, language = null) {
-        // return custom fallback if provided
-        if (customFallback) {
-            return customFallback;
-        }
-        
-        // get current language
-        const currentLang = language || this.getCurrentLanguage();
-        
-        // get translations
-        const translations = TRANSLATIONS;
-        
-        // get translation for current language
-        const translation = translations[currentLang]?.[key];
-        if (translation) {
-            return translation;
-        }
-        
-        // if current language is not english, try english fallback
-        if (currentLang !== 'en') {
-            const englishTranslation = translations['en']?.[key];
-            if (englishTranslation) {
-                return englishTranslation;
-            }
-        }
-        
-        // if no translation found, return key itself
-        return key;
     }
 
    async getCurrentLanguage() {

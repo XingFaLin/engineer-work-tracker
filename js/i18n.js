@@ -2,7 +2,7 @@
 class I18n {
     constructor() {
         this.currentLang = this.getDefaultLanguage();
-       this.translations = window.TRANSLATIONS || TRANSLATIONS;
+        this.translations = window.TRANSLATIONS || {};
     }
     
     // get default language
@@ -30,7 +30,15 @@ class I18n {
     // get translation
     t(key) {
         const translation = this.translations[this.currentLang]?.[key];
-        return translation || key;
+        if (translation) return translation;
+        
+        // Fallback to English
+        const fallback = this.translations['en']?.[key];
+        if (fallback) return fallback;
+        
+        // Return key if no translation found
+        console.warn(`Missing translation for key: ${key}`);
+        return key;
     }
     
     // update UI

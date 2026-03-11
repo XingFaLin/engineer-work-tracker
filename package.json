@@ -1,17 +1,17 @@
 {
   "name": "engineer-work-tracker",
   "version": "1.0.0",
-  "description": "Engineer Work Tracker - Automatically record and track engineer work achievements",
+  "description": "工程师工作管理系统 - 自动记录工作成果，生成各类报告，研发项目成本评估",
+  "author": "Lin Xingfa <linxf@top-iot.com>",
   "main": "main.js",
-  "directories": {
-    "js": "js",
-    "css": "css"
-  },
   "scripts": {
     "start": "electron .",
-    "dev": "electron . --dev"
+    "dev": "electron . --dev",
+    "build": "electron-packager . EngineerWorkTracker --platform=win32 --arch=x64 --out=dist-release --overwrite --asar",
+    "build:dir": "electron-packager . EngineerWorkTracker-Portable --platform=win32 --arch=x64 --out=dist-portable --overwrite"
   },
-  "dependencies": {
-    "electron": "^25.0.0"
+  "devDependencies": {
+    "electron": "^25.0.0",
+    "electron-packager": "^17.1.2"
   }
 }

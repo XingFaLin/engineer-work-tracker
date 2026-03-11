@@ -288,6 +288,12 @@ class WorkTrackerApp {
     <div id="allWorkList">
         <!-- Work records list will be dynamically generated here -->
     </div>
+</div>
+</div>`,
+            
+            'estimation': `<!-- R&D Estimation Page -->
+<h2>${window.i18n.t('estimation.title') || 'R&D Estimation'}</h2>
+<div id="estimationContent"></div>
 </div>`
         };
         

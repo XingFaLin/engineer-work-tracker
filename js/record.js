@@ -510,7 +510,7 @@ function getPlanStatusText(item) {
 
 // Display the work plan list
 function displayPlans(plans) {
-    console.log(window.i18n.t('record.displayPlanList'), plans.length);
+    console.log('Displaying plans:', plans.length);
     const planList = document.getElementById('planList');
     if (!planList) return;
     
@@ -523,8 +523,6 @@ function displayPlans(plans) {
         <div class="work-item" style="border-left: 4px solid ${getPlanStatusColor(plan.planStatus)}; margin-bottom: 10px;">
             <div style="display: flex; justify-content: space-between; align-items: start;">
                 <div style="flex: 1;">
-                    <div class="project">${plan.project}</div>
-                    <div class="date">${window.i18n.t('planDate')}: ${formatPlanDate(plan.date)} • ${getPlanStatusText(plan.planStatus)}</div>
                     <div class="project">${plan.project}</div>
                     <div class="date">${window.i18n.t('planDate')}: ${formatPlanDate(plan.date)} • ${getPlanStatusText(plan.planStatus)}</div>
                     <div style="margin-top: 5px;">
@@ -542,7 +540,7 @@ function displayPlans(plans) {
                     <button onclick="window.editPlan('${plan.id}')" class="btn" style="background: #17a2b8; color: white; padding: 5px 10px; font-size: 12px;">${window.i18n.t('edit')}</button>
                     <button onclick="window.markPlanCompleted('${plan.id}')" class="btn" style="background: #28a745; color: white; padding: 5px 10px; font-size: 12px;">${window.i18n.t('complete')}</button>
                     ` : ''}
-                    <button onclick="window.deletePlan('${plan.id}')" class="btn" style="background: #ffc107; color: black; padding: 5px 10px; font-size: 12px;">${window.i18n.t('delete')}</button>
+                    <button onclick="window.deletePlan('${plan.id}')" class="btn" style="background: #dc3545; color: white; padding: 5px 10px; font-size: 12px;">${window.i18n.t('delete')}</button>
                 </div>
             </div>
         </div>

@@ -53,6 +53,13 @@ function displayDataStats(workItems) {
     const totalTechnologies = new Set(workItems.map(item => item.technology)).size;
     const totalDays = new Set(workItems.map(item => item.date)).size;
     
+    // Get R&D Estimation stats
+    const estimationData = localStorage.getItem('rd_estimation_manager');
+    const estimation = estimationData ? JSON.parse(estimationData) : { projects: [], tasks: [], boms: [], labor: [] };
+    const estProjects = estimation.projects.length;
+    const estTasks = estimation.tasks.length;
+    const estLabor = estimation.labor.length;
+    
     statsContainer.innerHTML = `
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
             <div style="background: #f8f9fa; padding: 10px; border-radius: 5px;">
@@ -71,6 +78,14 @@ function displayDataStats(workItems) {
                 <div style="font-size: 1.5em; font-weight: bold;">${totalDays}</div>
                 <div>${window.i18n.t('data.totalWorkDays')}</div>
             </div>
+            <div style="background: #e7f1ff; padding: 10px; border-radius: 5px;">
+                <div style="font-size: 1.5em; font-weight: bold;">${estProjects}</div>
+                <div>${window.i18n.t('data.estimationProjects') || '评估项目'}</div>
+            </div>
+            <div style="background: #e7f1ff; padding: 10px; border-radius: 5px;">
+                <div style="font-size: 1.5em; font-weight: bold;">${estTasks + estLabor}</div>
+                <div>${window.i18n.t('data.estimationTasks') || '评估任务/人力'}</div>
+            </div>
         </div>
     `;
 }
@@ -78,14 +93,27 @@ function displayDataStats(workItems) {
 
 async function exportData() {
     try {
-        let workItems = [];
+        let data;
         if (window.electronAPI) {
-            workItems = await window.electronAPI.getWorkItems();
+            // Use Electron API for export
+            data = await window.electronAPI.exportData();
         } else {
-            workItems = await app.mockGetWorkItems();
+            // Browser environment: get data from localStorage
+            const workItems = await app.mockGetWorkItems();
+            
+            // Get R&D Estimation data
+            const estimationData = localStorage.getItem('rd_estimation_manager');
+            const estimation = estimationData ? JSON.parse(estimationData) : { projects: [], tasks: [], boms: [], labor: [] };
+            
+            data = {
+                version: '1.0',
+                exportedAt: new Date().toISOString(),
+                workItems: workItems,
+                estimation: estimation
+            };
         }
         
-        const dataStr = JSON.stringify(workItems, null, 2);
+        const dataStr = JSON.stringify(data, null, 2);
         const blob = new Blob([dataStr], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -116,11 +144,34 @@ function importData() {
             const text = await file.text();
             const data = JSON.parse(text);
             
-            if (window.electronAPI) {                  
-                app.showAlert(window.i18n.t('msg.electronOnly'), 'info');
+            let success = false;
+            if (window.electronAPI) {
+                // Electron environment: use importData API
+                const workItems = data.workItems || data;
+                success = await window.electronAPI.importData(workItems);
+                
+                // Import R&D Estimation data if exists
+                if (data.estimation) {
+                    localStorage.setItem('rd_estimation_manager', JSON.stringify(data.estimation));
+                }
+                
+                if (success) {
+                    app.showAlert(window.i18n.t('msg.importSuccess'), 'success');
+                    loadDataManagement();
+                }
             } else {
-                localStorage.setItem('workData', JSON.stringify(data));
-                app.showAlert(window.i18n.t('msg.importSuccess'), 'success');
+                // Browser environment: save to localStorage
+                const workItems = data.workItems || data;
+                localStorage.setItem('workData', JSON.stringify(workItems));
+                
+                // Import R&D Estimation data if exists
+                if (data.estimation) {
+                    localStorage.setItem('rd_estimation_manager', JSON.stringify(data.estimation));
+                    app.showAlert(window.i18n.t('msg.importSuccess') + ' ' + window.i18n.t('msg.importEstimationSuccess'), 'success');
+                } else {
+                    app.showAlert(window.i18n.t('msg.importSuccess'), 'success');
+                }
+                
                 loadDataManagement();
             }
         } catch (error) {
@@ -132,15 +183,29 @@ function importData() {
     input.click();
 }
 
-function clearData() {
+async function clearData() {
     if (confirm(window.i18n.t('msg.clearConfirm'))) {
         if (confirm(window.i18n.t('msg.clearConfirmAgain'))) {
-            if (window.electronAPI) {
-                app.showAlert(window.i18n.t('msg.electronOnly'), 'info');
-            } else {
-                localStorage.removeItem('workData');
-                app.showAlert(window.i18n.t('msg.clearSuccess'), 'success');
-                loadDataManagement();
+            try {
+                // Get all items and delete them one by one
+                if (window.electronAPI) {
+                    const allItems = await window.electronAPI.getWorkItems();
+                    for (const item of allItems) {
+                        await window.electronAPI.deleteWorkItem(item.id);
+                    }
+                    // Also clear R&D Estimation data
+                    localStorage.removeItem('rd_estimation_manager');
+                    app.showAlert(window.i18n.t('msg.clearSuccess'), 'success');
+                    loadDataManagement();
+                } else {
+                    localStorage.removeItem('workData');
+                    // Also clear R&D Estimation data
+                    localStorage.removeItem('rd_estimation_manager');
+                    app.showAlert(window.i18n.t('msg.clearSuccess'), 'success');
+                    loadDataManagement();
+                }
+            } catch (error) {
+                app.showAlert(`${window.i18n.t('error.clearFailed')}: ${error.message}`, 'error');
             }
         }
     }
@@ -552,7 +617,13 @@ async function deleteProject(projectName) {
             
             // Save the updated data
             if (window.electronAPI) {
-                app.showAlert(window.i18n.t('data.modifyInfo'), 'info');
+                // For Electron, we need to delete each item individually
+                const itemsToDelete = allItems.filter(item => item.project === projectName);
+                for (const item of itemsToDelete) {
+                    await window.electronAPI.deleteWorkItem(item.id);
+                }
+                app.showAlert(window.i18n.t('data.projectDeleted', projectName), 'success');
+                loadDataManagement();
             } else {
                 localStorage.setItem('workData', JSON.stringify(filteredItems));
                 app.showAlert(window.i18n.t('data.projectDeleted', projectName), 'success');

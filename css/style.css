@@ -167,7 +167,7 @@ textarea.form-control {
 /* 工作类型选择按钮组样式 */
 .work-type-buttons {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     margin-bottom: 15px;
 }

@@ -19,4 +19,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     
     // get statistics
     getStatistics: (period) => ipcRenderer.invoke('get-statistics', period),
+    
+    // export data
+    exportData: () => ipcRenderer.invoke('export-data'),
+    
+    // import data
+    importData: (data) => ipcRenderer.invoke('import-data', data),
 });
